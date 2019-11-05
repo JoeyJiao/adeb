@@ -45,6 +45,8 @@ Host needs debootstrap and qemu-debootstrap packages.
 To install it, run `sudo apt-get install qemu-user-static debootstrap`.
 Other distributions may work but they are not tested.
 
+debootstrap relies on wget to download, if proxy needed, edit http_proxy inside /etc/wgetrc.
+
 Quick Start Instructions
 ------------------------
 * First clone this repository into adb and cd into it.
