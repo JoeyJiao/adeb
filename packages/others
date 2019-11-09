@@ -1,3 +1,5 @@
 PACKAGES+="\
 xz-utils
+iproute2
+wireless-tools
 "
