@@ -32,6 +32,19 @@ do_mounts()
 		mount --bind /system debian/system/
 	fi
 
+	if [ -d /system/system_ext/ ]; then
+		mkdir -p debian/system_ext/
+		mount --bind /system/system_ext debian/system_ext/
+	fi
+
+	if [ -d /apex/ ]; then
+		mkdir -p debian/apex/
+		mount --bind /apex debian/apex/
+		mount --bind /apex/com.android.runtime debian/apex/com.android.runtime
+		mount --bind /apex/com.android.media debian/apex/com.android.media
+		mount --bind /apex/com.android.art debian/apex/com.android.art
+	fi
+
 	if [ -d /vendor/ ]; then
 		mkdir -p debian/vendor/
 		mount --bind /vendor debian/vendor/
