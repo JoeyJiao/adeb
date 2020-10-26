@@ -40,7 +40,7 @@ function remote_adb_pull() {
 	file_count=`count_sources $@`
 	i=0
 	while [ $i -lt $file_count ]; do
-		files["$i"]=/data/androdeb/debian/$1
+		files["$i"]=/data/local/tmp/androdeb/debian/$1
 		shift || true
 		i=$((i + 1))
 	done
@@ -55,7 +55,7 @@ function remote_adb_push() {
 		shift || true
 		i=$((i + 1))
 	done
-	dest=/data/androdeb/debian/$1
+	dest=/data/local/tmp/androdeb/debian/$1
 	$ADB push $sync "${files[@]}" $dest
 }
 
@@ -80,14 +80,14 @@ function remote_ssh_pull() {
 
 	for file in $src
 	do
-		SRC="$SRC /data/androdeb/debian/$file"
+		SRC="$SRC /data/local/tmp/androdeb/debian/$file"
 	done
 	$SSHPASS scp -r $SSH_URI:"$SRC" $DEST
 }
 
 function remote_ssh_push() {
 	SRC="${@:1:$#-1}"
-	DEST="/data/androdeb/debian/${@:$#}"
+	DEST="/data/local/tmp/androdeb/debian/${@:$#}"
 	$SSHPASS scp -r $SRC $SSH_URI:$DEST
 }
 

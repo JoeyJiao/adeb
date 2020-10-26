@@ -42,7 +42,9 @@ do_mounts()
 		mount --bind /apex debian/apex/
 		mount --bind /apex/com.android.runtime debian/apex/com.android.runtime
 		mount --bind /apex/com.android.media debian/apex/com.android.media
+                if [ -d /apex/com.android.art ]; then
 		mount --bind /apex/com.android.art debian/apex/com.android.art
+                fi 
 	fi
 
 	if [ -d /vendor/ ]; then
