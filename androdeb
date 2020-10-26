@@ -219,16 +219,19 @@ if [ ! -z "$TARF" ]; then
 	c_info "Pushing filesystem to device.."
 	run_quiet remote_copy $TARF /data/androdeb/deb.tar.gz
 
-        if [ "$OS" == "Windows_NT" ]; then
-        c_info "Pushing addons to device on windows.."
-	run_quiet remote_copy $spath/addons/ /data/androdeb/
-        remote_shell chmod +x /data/androdeb/run*
-        remote_shell chmod +x /data/androdeb/device-*
-        remote_shell chmod +x /data/androdeb/get_kvers.sh
-        else
-	c_info "Pushing addons to device.."
-	run_quiet remote_copy $spath/addons/* /data/androdeb/
-        fi
+	if [ "$OS" == "Windows_NT" ]; then
+		c_info "Pushing addons to device on windows.."
+		pushd $spath
+		run_quiet remote_copy addons/* /data/androdeb/
+		popd
+		run_quiet remote_shell chmod +x /data/androdeb/run*
+		run_quiet remote_shell chmod +x /data/androdeb/device-*
+		run_quiet remote_shell chmod +x /data/androdeb/get_kvers.sh
+		run_quiet remote_shell chmod +x /data/androdeb/build*
+	else
+		c_info "Pushing addons to device.."
+		run_quiet remote_copy $spath/addons/* /data/androdeb/
+	fi
 
 	c_info "Unpacking filesystem in device.."
 	run_quiet remote_shell /data/androdeb/device-unpack

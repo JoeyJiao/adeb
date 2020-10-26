@@ -24,7 +24,11 @@ function validate_remote() {
 # Adb Commands
 #
 function remote_adb_shell() {
+	if [ "$OS" == "Windows_NT" ]; then
+	$ADB shell -tt "$@"
+	else
 	$ADB shell "$@"
+	fi
 }
 
 function remote_adb_pull() {
