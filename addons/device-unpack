@@ -4,7 +4,7 @@ set -e
 
 # Script to do unpack of rootfs, ensures proper tear down
 # of existing environment. Expects debian rootfs in
-# /data/deb.tar.gz which it will delete after successful
+# /data/local/tmp/deb.tar.gz which it will delete after successful
 # unpack of rootfs.
 
 spath=$( cd "$(dirname "$0")" ; pwd -P )
