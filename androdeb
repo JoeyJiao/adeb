@@ -122,14 +122,14 @@ fi
 
 if [ ! -z "$REMOVE" ]; then
 	die_if_no_androdeb "Nothing to remove."
-	remote_shell /data/androdeb/device-umount-all || true;
-	remote_shell rm -rf /data/androdeb; exit 0; fi
+	remote_shell /data/local/tmp/androdeb/device-umount-all || true;
+	remote_shell rm -rf /data/local/tmp/androdeb; exit 0; fi
 
 ##########################################################
 #  SHELL
 ##########################################################
 if [ ! -z ${ASHELL+x} ]; then
-	set +e; remote_shell ls /data/androdeb/debian/.bashrc > /dev/null 2>&1
+	set +e; remote_shell ls /data/local/tmp/androdeb/debian/.bashrc > /dev/null 2>&1
 	if [ $? -ne 0 ]; then
 	   die 2 "Device doesn't have an androdeb environment, run \"./androdeb prepare\" first";
 	fi; set -e
@@ -139,9 +139,9 @@ if [ ! -z ${ASHELL+x} ]; then
 		# Outer quote is so that androdeb's bash passes the SHELL_ARGS as a single
 		# argument to $ADB shell. Inner quotes is so that run-command can receive all
 		# the args even though they may be separated by spaces. \m/
-		remote_shell -t /data/androdeb/run-command "\"$SHELL_ARGS\""
+		remote_shell -t /data/local/tmp/androdeb/run-command "\"$SHELL_ARGS\""
 	else
-		remote_shell -t /data/androdeb/run
+		remote_shell -t /data/local/tmp/androdeb/run
 	fi
 
 	exit 0
@@ -214,27 +214,27 @@ OUT_TMP=$TDIR/debian; rm -rf $OUT_TMP; mkdir -p $OUT_TMP
 # Build FS from existing tar, very simple.
 if [ ! -z "$TARF" ]; then
 	c_info "Using archive at $TARF for filesystem preparation"
-	remote_shell mkdir -p /data/androdeb/
+	remote_shell mkdir -p /data/local/tmp/androdeb/
 
 	c_info "Pushing filesystem to device.."
-	run_quiet remote_copy $TARF /data/androdeb/deb.tar.gz
+	run_quiet remote_copy $TARF /data/local/tmp/androdeb/deb.tar.gz
 
 	if [ "$OS" == "Windows_NT" ]; then
 		c_info "Pushing addons to device on windows.."
 		pushd $spath
-		run_quiet remote_copy addons/* /data/androdeb/
+		run_quiet remote_copy addons/* /data/local/tmp/androdeb/
 		popd
-		run_quiet remote_shell chmod +x /data/androdeb/run*
-		run_quiet remote_shell chmod +x /data/androdeb/device-*
-		run_quiet remote_shell chmod +x /data/androdeb/get_kvers.sh
-		run_quiet remote_shell chmod +x /data/androdeb/build*
+		run_quiet remote_shell chmod +x /data/local/tmp/androdeb/run*
+		run_quiet remote_shell chmod +x /data/local/tmp/androdeb/device-*
+		run_quiet remote_shell chmod +x /data/local/tmp/androdeb/get_kvers.sh
+		run_quiet remote_shell chmod +x /data/local/tmp/androdeb/build*
 	else
 		c_info "Pushing addons to device.."
-		run_quiet remote_copy $spath/addons/* /data/androdeb/
+		run_quiet remote_copy $spath/addons/* /data/local/tmp/androdeb/
 	fi
 
 	c_info "Unpacking filesystem in device.."
-	run_quiet remote_shell /data/androdeb/device-unpack
+	run_quiet remote_shell /data/local/tmp/androdeb/device-unpack
 
 	do_cleanup; all_done_banner; exit 0
 fi
@@ -268,10 +268,10 @@ if [ $SKIP_DEVICE -eq 1 ]; then
 fi
 
 # Push tar to device and start unpack
-remote_shell mkdir -p /data/androdeb/
-remote_copy $TDIR/deb.tar.gz /data/androdeb/
-remote_copy $spath/addons/* /data/androdeb/
-remote_shell /data/androdeb/device-unpack
+remote_shell mkdir -p /data/local/tmp/androdeb/
+remote_copy $TDIR/deb.tar.gz /data/local/tmp/androdeb/
+remote_copy $spath/addons/* /data/local/tmp/androdeb/
+remote_shell /data/local/tmp/androdeb/device-unpack
 
 # Extract a tar of the built, compiled and installed androdeb env
 if [[ ! -z ${TARDIR+x} ]]; then
@@ -280,9 +280,9 @@ if [[ ! -z ${TARDIR+x} ]]; then
 	if [ $INSTALL_BCC -eq 0 ]; then
 		mv $TDIR/deb.tar.gz $FNAME_UZ
 	else
-		remote_shell /data/androdeb/build-debian-tar
-		remote_pull /data/androdeb/androdeb-fs.tgz $FNAME_UZ
-		remote_shell rm /data/androdeb/androdeb-fs.tgz;
+		remote_shell /data/local/tmp/androdeb/build-debian-tar
+		remote_pull /data/local/tmp/androdeb/androdeb-fs.tgz $FNAME_UZ
+		remote_shell rm /data/local/tmp/androdeb/androdeb-fs.tgz;
 	fi
 	zip -r $FNAME $FNAME_UZ
 	popd
